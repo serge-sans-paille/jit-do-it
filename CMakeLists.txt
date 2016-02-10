@@ -11,15 +11,16 @@ include(Python)
 
 # LLVM detection part
 set(LLVM_ROOT "" CACHE PATH "Root of LLVM install.")
+set(LLVM_SUFFIX "" CACHE STRING "llvm suffix, e.g. -3.7")
 
 # A bit of a sanity check:
-if( NOT EXISTS ${LLVM_ROOT}/include/llvm )
+if( NOT EXISTS ${LLVM_ROOT}/include/llvm${LLVM_SUFFIX})
 message(FATAL_ERROR "LLVM_ROOT (${LLVM_ROOT}) is not a valid LLVM install")
 endif()
 
 
 # Incorporate the CMake features provided by LLVM:
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${LLVM_ROOT}/share/llvm/cmake")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${LLVM_ROOT}/share/llvm${LLVM_SUFFIX}/cmake")
 
 # only needed for multi target build?
 set(LLVM_RUNTIME_OUTPUT_INTDIR ${CMAKE_CFG_INTDIR})
@@ -40,7 +41,8 @@ configure_file("${CMAKE_SOURCE_DIR}/tests/lit.cfg.in" "${CMAKE_BINARY_DIR}/tests
 
 # testing part relies on lit
 find_python_module(lit REQUIRED)
-add_custom_target(check COMMAND ${PYTHON_EXECUTABLE} -m lit.main ${CMAKE_BINARY_DIR}/tests)
+add_custom_target(check COMMAND ${PYTHON_EXECUTABLE} -m lit.main -v ${CMAKE_BINARY_DIR}/tests
+                        DEPENDS LLVMReadAttributes)
 
 # Finally load appropriate config from subdirs
 add_subdirectory(llvm-passes)

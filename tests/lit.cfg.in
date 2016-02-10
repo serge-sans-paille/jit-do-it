@@ -24,6 +24,8 @@ config.suffixes = ['.ll', '.c', '.cpp', '.test', '.txt', '.s', '.sh']
 config.excludes = ['CMakeCache.txt', 'CMakeFiles', 'CMakeLists.txt']
 
 config.substitutions.append(('%bindir', "@CMAKE_BINARY_DIR@"))
+config.substitutions.append(('%opt', "opt@LLVM_SUFFIX@"))
+config.substitutions.append(('%clang', "clang@LLVM_SUFFIX@"))
 
 
 # environment: Set PATH as required

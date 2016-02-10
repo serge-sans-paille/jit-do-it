@@ -1,0 +1,24 @@
+language: c++
+sudo: false
+
+addons:
+    apt:
+        sources:
+            - llvm-toolchain-precise-3.7
+            - ubuntu-toolchain-r-test
+        packages:
+            - clang-3.7
+            - llvm-3.7-dev
+            - cmake
+            - python-pip
+
+before_install:
+    - pip install --user lit
+
+script:
+    - mkdir _build && cd _build
+    - cmake .. -DLLVM_ROOT=/usr -DLLVM_SUFFIX=-3.7 -DCMAKE_C_COMPILER=clang-3.7 -DCMAKE_CXX_COMPILER=clang++-3.7 -DLLVM_FORCE_USE_OLD_TOOLCHAIN=ON
+    - make check
+
+notifications:
+    email: false
