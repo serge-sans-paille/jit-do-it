@@ -1,4 +1,4 @@
-; RUN: test `opt -stats -load %bindir/llvm-passes/LLVMReadAttributes${MOD_EXT} -ReadAttributes %s -o %t1.ll 2>&1 | grep -c '1 ReadAttributes'` = 1
+; RUN: test `%opt -analyze -load %bindir/llvm-passes/LLVMReadAttributes${MOD_EXT} -ReadAttributes %s  2>&1 | wc -l` = 2
 
 ; ModuleID = 'basic_test.c'
 target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"

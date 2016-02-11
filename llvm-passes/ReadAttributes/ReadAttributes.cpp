@@ -28,12 +28,17 @@ class ReadAttributes : public ModulePass {
         static char ID;
         ReadAttributes() : ModulePass(ID) {}
 
+        void print(llvm::raw_ostream &O, const Module *) const override {
+          for(auto&& F : FunctionsToJit)
+            O << F->getName() << "\n";
+        }
+
         bool runOnModule(Module &mod) override {
             FunctionsToJit.clear();
 
             auto Annotations = mod.getNamedGlobal("llvm.global.annotations");
             if(!Annotations) {
-                dbgs() << "No annotations found!\n";
+                DEBUG(dbgs() << "No annotations found!\n");
                 return false;
             }
 
@@ -46,7 +51,7 @@ class ReadAttributes : public ModulePass {
                     if(Anno == JitAnnotation) {
                         FunctionsToJit.insert(Fn);
                         ++NumberFunctionsToJit;
-                        dbgs() << "Found 'jitme' annotation on function: " << Fn->getName() << "\n";
+                        DEBUG(dbgs() << "Found 'jitme' annotation on function: " << Fn->getName() << "\n");
                     }
                 }
             }
